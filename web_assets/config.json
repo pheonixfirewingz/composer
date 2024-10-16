@@ -1,3 +1,6 @@
 {
-    "website_name": "127.0.0.1"
+    "site_root": "/submit",
+    "music_dir" : "/home/luket/Desktop/composer/fake_root/music",
+    "web_assets_dir": "/home/luket/Desktop/composer/web_assets",
+    "templates_dir": "/home/luket/Desktop/composer/web_assets/templates"
 }
