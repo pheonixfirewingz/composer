@@ -1,0 +1,152 @@
+@import url('https://fonts.googleapis.com/css2?family=Edu+AU+VIC+WA+NT+Guides:wght@400..700&display=swap');
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Edu AU VIC WA NT Guides", cursive;
+    font-optical-sizing: auto;
+    font-weight: bold;
+    font-style: normal;
+}
+
+body {
+    background-image: url('background.webp');
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
+    margin: 0;
+    color: white;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: rgba(177, 177, 177, 0.65);
+    height: 5vh;
+    width: 100%;
+    padding: 10px 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+    grid-area: header;
+}
+
+#shadow {
+    overflow: hidden;
+    display: grid;
+    background-color: rgba(0, 0, 0, 0.7);
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 0.1fr 3fr 0.1fr;
+    grid-template-areas:
+        "header header header"
+        ". content ."
+        "footer footer footer";
+    height: 100%;
+    gap: 10%;
+}
+
+#shadow h1 {
+    transform: translateY(-150%);
+}
+
+.frosted-glass {
+    grid-area: content;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    padding: 5px;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    align-content: center;
+}
+
+.form {
+    transform: translateY(-20%);
+    padding: 20px 0 20px 0;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    max-width: 500px;
+    max-height: 500px;
+    margin: 0 auto;
+}
+
+.form input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 16px;
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+
+.button {
+    background-color: #7f7f7f;
+    color: white;
+    border: none;
+    border-radius: 30px;
+    padding: 12px 24px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.button:hover {
+    background-color: #5a5a5a;
+    transform: scale(1.01);
+}
+
+.button:focus {
+    outline: none;
+}
+
+@media (max-width: 1024px) {
+    header {
+        background-color: rgba(0, 0, 0, 0.0);
+    }
+    #shadow {
+        grid-template-areas:
+                "header header header"
+                "content content content";
+    "footer footer footer";
+    }
+    .frosted-glass h1 {
+        transform: translateY(-110%);
+    }
+}
+
+@media (max-height: 700px) and (max-width: 1024px) {
+    header {
+        display: none;
+    }
+    .frosted-glass h1 {
+        transform: none !important;
+    }
+
+    #shadow {
+        grid-template-columns: auto;
+        grid-template-rows: auto;
+        grid-template-areas: "content";
+    }
+
+    .form {
+        gap: 1px;
+        padding: 1px;
+        transform: scale(80%);
+    }
+
+    .form input {
+        padding: 1px;
+    }
+}
+
+@media (max-height: 720px) and (max-width: 540px) {
+    .frosted-glass h1 {
+        transform: translateY(20%) !important;
+    }
+    .form {
+        transform: scale(70%) translateY(-5%);
+    }
+}
