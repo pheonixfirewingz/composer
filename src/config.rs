@@ -4,25 +4,8 @@ use serde::Deserialize;
 
 #[derive(Deserialize, Debug)]
 pub struct Config{
-    pub site_root: String,
+    pub root_dir: String,
     pub music_dir: String,
-    pub web_assets_dir: String,
-    pub templates_dir: String
-}
-
-pub struct UploadConfig{
-    pub web_assets_dir: String,
-    pub music_dir: String
-}
-
-impl UploadConfig {
-    // Constructor for UploadConfig
-    pub fn new(web_assets_dir: String, music_dir: String) -> Self {
-        UploadConfig {
-            web_assets_dir,
-            music_dir,
-        }
-    }
 }
 
 #[derive(Parser)]

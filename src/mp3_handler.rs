@@ -1,14 +1,13 @@
-use crate::upload::error_page;
-use id3::{Content, Frame, Tag, TagLike, Version};
+use crate::error;
+use id3::{frame, Tag, TagLike, Version};
+use rocket::response::Redirect;
 use rocket::yansi::Paint;
-use rocket_dyn_templates::{context, Template};
 use std::fs;
 use std::fs::OpenOptions;
 use std::io::{Cursor, Write};
 use std::ops::Deref;
 use std::path::{Path, PathBuf};
 use std::process::Command;
-use id3::frame::Comment;
 
 #[inline(always)]
 fn get_bitrate(file_path: &str) -> Option<u32> {
@@ -68,54 +67,57 @@ fn update_mp3_metadata_in_place(mp3_data: &mut Vec<u8>, new_artist: &str, new_ti
     let mut cursor = Cursor::new(mp3_data);
     let mut tag = Tag::read_from2(&mut cursor).unwrap_or_else(|_| Tag::new());
     tag.resetting();
+    for i in tag.clone().comments()
+    {
+        let text = Option::from(i.description.as_str());
+        let description = Option::from(i.description.as_str());
+        tag.remove_comment(text, description);
+    }
     tag.set_artist(new_artist);
     tag.set_title(new_title);
     tag.set_album(new_album);
-    let frame = Frame::with_content("COMM", Content::Comment(Comment {
+    tag.add_frame(frame::Comment{
         lang: "eng".to_owned(),
         description: "Register".to_owned(),
         text: format!("{} Registered By {}",new_title,user)
-    }));
-    tag.add_frame(frame);
+    });
     cursor.set_position(0);
     tag.write_to(&mut cursor, Version::Id3v24).expect("Failed to write updated tag");
 }
 
-pub fn process_mp3(mut file_data: Vec<u8>, title:&str, artist:&str, album:&str,user: &str, music_dir:&str) -> Template {
+pub fn process_mp3(mut file_data: Vec<u8>, title:&str, artist:&str, album:&str,user: &str, music_dir:&str) -> Redirect {
     update_mp3_metadata_in_place(&mut file_data,artist,title,user,album);
     let transformed_title = title.replace(' ', "_").to_lowercase();
     let transformed_artist = artist.replace(' ', "_").to_lowercase();
     let artist_dir: PathBuf = find_or_create_artist_directory(music_dir,&transformed_artist);
     if mp3_file_exists(artist_dir.as_path().to_str().unwrap(),&transformed_title) {
-        return error_page("This MP3/Song is already Registered with Navidrome");
+        return error::page("This MP3/Song is already Registered with Navidrome");
     }
 
     let file_path: PathBuf = artist_dir.join(transformed_title.clone() + ".mp3");
     let file = OpenOptions::new().write(true).create_new(true).open(&file_path);
     if file.is_err() {
         eprintln!("{}",file.err().unwrap());
-        return error_page("500 - failed to save mp3 to server memory");
+        return error::page("500 - failed to save mp3 to server memory");
     }
     let _ = file.unwrap().write_all(file_data.deref());
 
     let kbps = get_bitrate(file_path.to_str().unwrap());
     if kbps.is_none() {
         let _ = fs::remove_file(file_path);
-        return error_page("failed to convert file for storage could not determine file quality");
+        return error::page("failed to convert file for storage could not determine file quality");
     }
     let bit_rate = kbps.unwrap();
     if bit_rate < 128 {
         let _ = fs::remove_file(file_path);
-        return error_page("failed to convert file for storage file quality to low needs to be 128kbps or higher");
+        return error::page("failed to convert file for storage file quality to low needs to be 128kbps or higher");
     }
     let temp_path: PathBuf = artist_dir.join(transformed_title + "_temp.mp3");
-    if !re_encode_mp3(file_path.to_str().unwrap(),temp_path.to_str().unwrap()) {
-        let _ = fs::remove_file(file_path);
-        return error_page("failed to convert file for storage file");
+    if bit_rate != 128 {
+        if !re_encode_mp3(file_path.to_str().unwrap(), temp_path.to_str().unwrap()) {
+            let _ = fs::remove_file(file_path);
+            return error::page("failed to convert file for storage file");
+        }
     }
-
-    Template::render("SubmitResponse", context! {
-        failed: false,
-        message: ""
-    })
+    Redirect::to("/submit/success")
 }

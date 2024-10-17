@@ -1,6 +1,4 @@
 {
-    "site_root": "/submit",
-    "music_dir" : "/home/luket/Desktop/composer/fake_root/music",
-    "web_assets_dir": "/home/luket/Desktop/composer/web_assets",
-    "templates_dir": "/home/luket/Desktop/composer/web_assets/templates"
+    "root_dir": "/home/luket/Desktop/composer",
+    "music_dir" : "/home/luket/Desktop/composer/fake_root/music"
 }

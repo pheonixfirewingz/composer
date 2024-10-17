@@ -8,19 +8,14 @@
    </head>
    <body>
       <div id="shadow">
-         <header>
-            <br/> <!-- this only here as a style chose -->
-         </header>
          <div class="frosted-glass">
            <h1>Submit an MP3</h1>
-           <form action="/submit/upload" method="post" enctype="multipart/form-data" class="form">
-              <label>User: <input type="username" name="username" required /></label><br />
-              <label>Password: <input type="password" name="password" required /></label><br />
+           <form action="/submit/upload/send" method="post" enctype="multipart/form-data" class="form">
               <label>Artist: <input type="text" name="artist" required /></label><br />
               <label>Title:<input type="text" name="title" required /></label><br />
               <label>Album:<input type="text" name="album" required /></label><br />
               <label>File:<input type="file" name="file" accept=".mp3" required /></label><br />
-              <input class="button" type="submit" value="Upload" onClick="encrypt()" />
+              <input class="button" type="submit" value="Upload" />
            </form>
          </div>
       </div>

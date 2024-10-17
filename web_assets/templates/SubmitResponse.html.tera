@@ -4,18 +4,17 @@
       <meta charset="UTF-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <title>MP3 Submission Form</title>
-      <link rel="stylesheet" type="text/css" href="assets/style.css" />
+      <link rel="stylesheet" type="text/css" href="/submit/assets/style.css" />
    </head>
    <body>
       <div id="shadow">
-         <header>
-            <br/> <!-- this only here as a style chose -->
-         </header>
          <div class="frosted-glass">
             {% if failed %}
                 <p>{{ message }}</p>
             {% else %}
                 <p>MP3 Successfully Registered To The Server</p>
+                <button onclick="window.location.href='/submit/upload'">Upload Another?</button>
+                <button onclick="window.location.href='/submit/logout'">Log Out</button>
             {% endif %}
          </div>
       </div>

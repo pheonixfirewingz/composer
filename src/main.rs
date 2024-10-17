@@ -6,13 +6,30 @@ mod static_asset_manager;
 mod data_base_manager;
 mod mp3_handler;
 mod config;
+mod login;
+mod error;
 
 use std::env;
+use std::path::PathBuf;
 use std::process::exit;
-use rocket::{Build, Rocket};
+use rocket::{Build, Rocket, State};
+use rocket::http::CookieJar;
+use rocket::response::Redirect;
 use rocket_dyn_templates::Template;
-use crate::config::{setup_config, Config, UploadConfig};
-//main is only used to set up routing for the webserver don't add logic here
+use crate::config::{setup_config, Config};
+use crate::error::_error;
+use crate::login::{logout,login_data, login_form};
+use crate::static_asset_manager::get_assets;
+use crate::upload::{upload_data, upload_form, upload_success};
+
+#[get("/")]
+pub async fn root(_config:&State<Config>,cookies: &CookieJar<'_>) -> Redirect {
+    if let Some(_) = cookies.get("user") {
+        return Redirect::to("/submit/upload");
+    }
+    Redirect::to("/submit/login")
+}
+
 #[launch]
 fn rocket() -> Rocket<Build> {
     let config: Option<Config> = setup_config();
@@ -24,10 +41,10 @@ fn rocket() -> Rocket<Build> {
         );
         exit(1);
     }
-
-    let config_data = config.unwrap();
+    let config = config.unwrap();
 
     // Build the Rocket application with increased limits
+    let template_dir: PathBuf = PathBuf::from(config.root_dir.clone()).join("web_assets/templates");
     rocket::build()
         .configure(
             rocket::Config::figment()
@@ -35,10 +52,10 @@ fn rocket() -> Rocket<Build> {
                 .merge(("limits.form", 13 * 1024 * 1024))
                 .merge(("limits.file", 13 * 1024 * 1024))
                 .merge(("limits.data-form",13 * 1024 * 1024))
-                .merge(("template_dir",config_data.templates_dir.clone()))
+                .merge(("template_dir",template_dir))
         )
-        .mount(config_data.site_root.clone(), routes![upload::upload_form, upload::upload_data, static_asset_manager::get_assets])
-        .manage(UploadConfig::new(config_data.web_assets_dir,config_data.music_dir))
+        .mount("/submit", routes![root,logout,login_form,login_data ,upload_form, upload_data,upload_success , _error, get_assets])
+        .manage(config)
         .attach(Template::fairing())
 }
 

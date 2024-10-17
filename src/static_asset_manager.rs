@@ -2,13 +2,13 @@ use std::path::PathBuf;
 use rocket::fs::NamedFile;
 use rocket::response::status::NotFound;
 use rocket::State;
-use crate::config::UploadConfig;
+use crate::config::Config;
 
 // we add a layer of security be rejecting any request that is not needed to make the website
 #[get("/assets/<path..>")]
-pub async fn get_assets(config:&State<UploadConfig>,path: PathBuf) -> Result<NamedFile, NotFound<String>> {
+pub async fn get_assets(config:&State<Config>,path: PathBuf) -> Result<NamedFile, NotFound<String>> {
     // Construct the full path to the file in the web_assets directory
-    let file_path = PathBuf::from(config.web_assets_dir.clone()).join(&path);
+    let file_path = PathBuf::from(config.root_dir.clone()).join("web_assets").join(&path);
 
     // Print out the path for debugging
     if cfg!(debug_assertions) {

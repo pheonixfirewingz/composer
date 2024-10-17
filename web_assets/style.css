@@ -18,18 +18,6 @@ body {
     color: white;
 }
 
-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: rgba(177, 177, 177, 0.65);
-    height: 5vh;
-    width: 100%;
-    padding: 10px 20px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
-    grid-area: header;
-}
-
 #shadow {
     overflow: hidden;
     display: grid;
@@ -37,15 +25,11 @@ header {
     grid-template-columns: 1fr 1fr 1fr;
     grid-template-rows: 0.1fr 3fr 0.1fr;
     grid-template-areas:
-        "header header header"
+        ". . ."
         ". content ."
-        "footer footer footer";
+        ". . .";
     height: 100%;
     gap: 10%;
-}
-
-#shadow h1 {
-    transform: translateY(-150%);
 }
 
 .frosted-glass {
@@ -60,7 +44,7 @@ header {
 }
 
 .form {
-    transform: translateY(-20%);
+    transform: translateY(-5%);
     padding: 20px 0 20px 0;
     border-radius: 12px;
     display: flex;
@@ -103,24 +87,15 @@ header {
 }
 
 @media (max-width: 1024px) {
-    header {
-        background-color: rgba(0, 0, 0, 0.0);
-    }
     #shadow {
         grid-template-areas:
-                "header header header"
+                ". . ."
                 "content content content";
-    "footer footer footer";
-    }
-    .frosted-glass h1 {
-        transform: translateY(-110%);
+                ". . .";
     }
 }
 
 @media (max-height: 700px) and (max-width: 1024px) {
-    header {
-        display: none;
-    }
     .frosted-glass h1 {
         transform: none !important;
     }
@@ -134,7 +109,7 @@ header {
     .form {
         gap: 1px;
         padding: 1px;
-        transform: scale(80%);
+        transform: scale(80%) translateY(50%);
     }
 
     .form input {
@@ -147,6 +122,6 @@ header {
         transform: translateY(20%) !important;
     }
     .form {
-        transform: scale(70%) translateY(-5%);
+        transform: scale(90%);
     }
 }

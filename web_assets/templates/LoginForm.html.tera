@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>MP3 Submission Form</title>
+      <link rel="stylesheet" type="text/css" href="/submit/assets/style.css" />
+   </head>
+   <body>
+      <div id="shadow">
+         <div class="frosted-glass">
+           <h1>Login</h1>
+           <form action="/submit/login/send" method="post" enctype="multipart/form-data" class="form">
+              <label>User: <input type="text" name="username" required /></label><br />
+              <label>Password: <input type="password" name="password" required /></label><br />
+              <input class="button" type="submit" value="Login In" />
+           </form>
+         </div>
+      </div>
+   </body>
+</html>
